@@ -3,9 +3,23 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import OSS from "ali-oss";
 
-const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".svg", ".ico"]);
+const IMAGE_EXT = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".webp",
+  ".bmp",
+  ".svg",
+  ".ico",
+]);
 
-const requiredEnv = ["OSS_ACCESS_KEY_ID", "OSS_ACCESS_KEY_SECRET", "OSS_BUCKET", "OSS_REGION"];
+const requiredEnv = [
+  "OSS_ACCESS_KEY_ID",
+  "OSS_ACCESS_KEY_SECRET",
+  "OSS_BUCKET",
+  "OSS_REGION",
+];
 
 const missing = requiredEnv.filter((key) => !process.env[key]);
 if (missing.length > 0) {
@@ -34,7 +48,8 @@ const isImageObject = (name) => {
   return IMAGE_EXT.has(lower.slice(dot));
 };
 
-const buildPublicUrl = (name) => `https://${bucket}.${region}.aliyuncs.com/${encodeURI(name)}`;
+const buildPublicUrl = (name) =>
+  `https://${bucket}.${region}.aliyuncs.com/${encodeURI(name)}`;
 
 const listRootImages = async () => {
   const images = [];
@@ -48,7 +63,8 @@ const listRootImages = async () => {
     });
 
     for (const obj of result.objects ?? []) {
-      if (!obj.name || obj.name.endsWith("/") || !isImageObject(obj.name)) continue;
+      if (!obj.name || obj.name.endsWith("/") || !isImageObject(obj.name))
+        continue;
       if (obj.name.includes("/")) continue;
 
       images.push({
