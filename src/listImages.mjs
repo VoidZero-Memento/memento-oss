@@ -96,6 +96,7 @@ const writeJson = (file, data) =>
 
 const { prefixes } = await listAll({ delimiter: "/" });
 const folders = [];
+const allImages = [];
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const outDir = join(__dirname, "..", "dist");
@@ -115,11 +116,16 @@ for (const prefix of prefixes) {
   const file = `${id}.json`;
 
   await writeJson(join(outDir, file), images);
+  allImages.push(...images);
   folders.push({ id, file, count: images.length });
   console.log(`已写入 ${images.length} 张图片 -> ${file}`);
 }
 
+allImages.sort((a, b) => a.name.localeCompare(b.name));
+await writeJson(join(outDir, "all.json"), allImages);
+
 folders.sort((a, b) => a.id.localeCompare(b.id));
 await writeJson(join(outDir, "folders.json"), { folders });
 
+console.log(`已写入全部 ${allImages.length} 张图片 -> all.json`);
 console.log(`共 ${folders.length} 个文件夹 -> folders.json`);
